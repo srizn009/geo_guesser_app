@@ -1,0 +1,102 @@
+// This is your Prisma schema file for the Nepal Geography Quiz Game
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model - stores registration data
+model User {
+  id        String   @id @default(cuid())
+  fullname  String
+  email     String   @unique
+  password  String
+  faculty   Faculty
+  year      Year
+  games     Game[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+// Location model - stores actual places in Nepal with their coordinates
+model Location {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  latitude    Float
+  longitude   Float
+  imageUrl    String
+  difficulty  Difficulty @default(MEDIUM)
+  guesses     Guess[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([difficulty])
+}
+
+// Game model - stores game sessions
+model Game {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalScore  Int         @default(0)
+  status      GameStatus  @default(IN_PROGRESS)
+  guesses     Guess[]
+  startedAt   DateTime    @default(now())
+  completedAt DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([totalScore])
+}
+
+// Guess model - stores individual guesses within a game
+model Guess {
+  id               String   @id @default(cuid())
+  gameId           String
+  game             Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  locationId       String
+  location         Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  guessedLatitude  Float
+  guessedLongitude Float
+  distance         Float    // Distance in kilometers
+  points           Int      // Points earned for this guess
+  createdAt        DateTime @default(now())
+
+  @@index([gameId])
+  @@index([locationId])
+}
+
+// Enums
+enum Faculty {
+  BSC_IT
+  BBA
+}
+
+enum Year {
+  FIRST
+  SECOND
+  THIRD
+  FOURTH
+}
+
+enum GameStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
