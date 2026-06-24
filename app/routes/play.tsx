@@ -155,6 +155,12 @@ export default function Play({ loaderData }: Route.ComponentProps) {
   const isSubmittedRef = useRef(false);
   const fetcher = useFetcher();
 
+  // Street View
+  const [useStreetView, setUseStreetView] = useState(false);
+  const [panoPosition, setPanoPosition] = useState<{ lat: number; lng: number } | null>(null);
+  const streetViewRef = useRef<HTMLDivElement>(null);
+  const panoramaRef = useRef<google.maps.StreetViewPanorama | null>(null);
+
   // Sync isSubmitted to ref (avoids stale closure in map click listener)
   useEffect(() => {
     isSubmittedRef.current = isSubmitted;
@@ -243,6 +249,50 @@ export default function Play({ loaderData }: Route.ComponentProps) {
       );
     }
   }, [gameCompleted]);
+
+  // Check Street View coverage whenever the location changes
+  useEffect(() => {
+    if (!map || !currentLocation) return;
+    setUseStreetView(false);
+    setPanoPosition(null);
+    if (panoramaRef.current) { panoramaRef.current.setVisible(false); panoramaRef.current = null; }
+
+    let cancelled = false;
+    const sv = new google.maps.StreetViewService();
+    sv.getPanorama(
+      { location: { lat: currentLocation.latitude, lng: currentLocation.longitude }, radius: 100, source: google.maps.StreetViewSource.OUTDOOR },
+      (data: google.maps.StreetViewPanoramaData | null, status: string) => {
+        if (cancelled) return;
+        if (status === 'OK' && data?.location?.latLng) {
+          const pos = data.location.latLng;
+          setPanoPosition({ lat: pos.lat(), lng: pos.lng() });
+          setUseStreetView(true);
+        }
+      }
+    );
+    return () => { cancelled = true; };
+  }, [map, currentLocation]);
+
+  // Initialize panorama once the Street View container div is rendered
+  useEffect(() => {
+    if (!useStreetView || !panoPosition || !streetViewRef.current) return;
+    panoramaRef.current = new google.maps.StreetViewPanorama(streetViewRef.current, {
+      position: panoPosition,
+      addressControl: false,
+      showRoadLabels: false,
+      enableCloseButton: false,
+      fullscreenControl: false,
+      motionTracking: false,
+      motionTrackingControl: false,
+    });
+    // Wait for the browser to paint the container with real dimensions before
+    // triggering resize — without this Street View sees a zero-size box and goes black
+    requestAnimationFrame(() => {
+      if (panoramaRef.current) {
+        google.maps.event.trigger(panoramaRef.current, 'resize');
+      }
+    });
+  }, [useStreetView, panoPosition]);
 
   // Initialize Google Maps (once — no currentLocation in deps)
   useEffect(() => {
@@ -370,10 +420,13 @@ export default function Play({ loaderData }: Route.ComponentProps) {
       setTimeLeft(60);
       setAnimatedScore(0);
       setAnimatedDistance(0);
+      setUseStreetView(false);
+      setPanoPosition(null);
 
       if (markerRef.current) { markerRef.current.setMap(null); markerRef.current = null; }
       if (actualMarkerRef.current) { actualMarkerRef.current.setMap(null); actualMarkerRef.current = null; }
       if (polylineRef.current) { polylineRef.current.setMap(null); polylineRef.current = null; }
+      if (panoramaRef.current) { panoramaRef.current.setVisible(false); panoramaRef.current = null; }
 
       if (map) { map.setCenter({ lat: 28.3949, lng: 84.124 }); map.setZoom(7); }
 
@@ -614,25 +667,33 @@ export default function Play({ loaderData }: Route.ComponentProps) {
           )}
         </div>
 
-        {/* Right: Image + results */}
+        {/* Right: Street View / Image + results */}
         <div className="w-1/2 flex flex-col bg-gray-900">
-          {/* Location image */}
+          {/* Location viewer */}
           <div className="flex-1 relative overflow-hidden bg-gray-950">
-            <img
-              src={currentLocation?.imageUrl}
-              alt="Mystery Location"
-              className="absolute inset-0 w-full h-full object-cover"
-              onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/800x600/1e1b4b/818cf8?text=Location+Image'; }}
-            />
+            {/* Street View container — rendered only when coverage confirmed */}
+            {useStreetView && (
+              <div ref={streetViewRef} className="absolute inset-0" style={{ touchAction: 'none' }} />
+            )}
+
+            {/* Image fallback — shown while checking coverage or when unavailable */}
+            {!useStreetView && (
+              <img
+                src={currentLocation?.imageUrl}
+                alt="Mystery Location"
+                className="absolute inset-0 w-full h-full object-cover"
+                onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/800x600/1e1b4b/818cf8?text=Location+Image'; }}
+              />
+            )}
 
             {/* Overlay: "Where is this?" */}
-            <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-gray-900/70 to-transparent px-5 pt-4 pb-8">
+            <div className="absolute top-0 left-0 right-0 z-10 pointer-events-none bg-gradient-to-b from-gray-900/70 to-transparent px-5 pt-4 pb-8">
               <p className="text-xs font-semibold text-indigo-300 uppercase tracking-widest">Round {currentRound} of 5</p>
               <p className="text-lg font-bold text-white mt-0.5">Where is this place?</p>
             </div>
 
             {/* Difficulty badge */}
-            <div className="absolute top-4 right-4">
+            <div className="absolute top-4 right-4 z-10 pointer-events-none">
               <span className={`px-3 py-1 rounded-full text-xs font-bold shadow ${
                 currentLocation?.difficulty === 'EASY' ? 'bg-emerald-500 text-white'
                 : currentLocation?.difficulty === 'MEDIUM' ? 'bg-yellow-500 text-white'
@@ -644,7 +705,7 @@ export default function Play({ loaderData }: Route.ComponentProps) {
 
             {/* Clue strip */}
             {!isSubmitted && currentLocation?.description && (
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent px-5 pt-10 pb-4">
+              <div className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent px-5 pt-10 pb-4">
                 <div className="flex items-start gap-2">
                   <span className="flex-shrink-0 mt-0.5 px-1.5 py-0.5 rounded text-xs font-black bg-yellow-400 text-gray-900 uppercase tracking-wide">
                     Clue
