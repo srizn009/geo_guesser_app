@@ -22,8 +22,6 @@ export async function loader({ request }: Route.LoaderArgs) {
     select: {
       id: true,
       fullname: true,
-      faculty: true,
-      year: true,
       games: {
         where: { status: 'COMPLETED' },
         select: {
@@ -38,8 +36,6 @@ export async function loader({ request }: Route.LoaderArgs) {
     .map((user) => ({
       id: user.id,
       fullname: user.fullname,
-      faculty: user.faculty,
-      year: user.year,
       totalScore: user.games.reduce((sum, game) => sum + game.totalScore, 0),
       gamesPlayed: user.games.length,
     }))
@@ -84,12 +80,6 @@ export default function Leaderboard({ loaderData }: Route.ComponentProps) {
     if (rank === 2) return '🥈';
     if (rank === 3) return '🥉';
     return '';
-  };
-
-  const getFacultyBadgeColor = (faculty: string) => {
-    return faculty === 'BSC_IT'
-      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-      : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
   };
 
   return (
@@ -186,9 +176,6 @@ export default function Leaderboard({ loaderData }: Route.ComponentProps) {
               <div className="text-right">
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
                   <p className="text-sm font-medium">{currentUser?.fullname}</p>
-                  <p className="text-xs text-white/80">
-                    {currentUserData.faculty === 'BSC_IT' ? 'BSC IT' : 'BBA'} • {currentUserData.year === 'FIRST' ? '1st' : currentUserData.year === 'SECOND' ? '2nd' : currentUserData.year === 'THIRD' ? '3rd' : '4th'} Year
-                  </p>
                 </div>
               </div>
             </div>
@@ -218,12 +205,6 @@ export default function Leaderboard({ loaderData }: Route.ComponentProps) {
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Player
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Faculty
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Year
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Games
@@ -273,14 +254,6 @@ export default function Leaderboard({ loaderData }: Route.ComponentProps) {
                             </div>
                           </div>
                         </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getFacultyBadgeColor(user.faculty)}`}>
-                          {user.faculty === 'BSC_IT' ? 'BSC IT' : 'BBA'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                        {user.year === 'FIRST' ? '1st' : user.year === 'SECOND' ? '2nd' : user.year === 'THIRD' ? '3rd' : '4th'} Year
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white text-right">
                         {user.gamesPlayed}

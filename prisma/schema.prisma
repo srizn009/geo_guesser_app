@@ -16,8 +16,6 @@ model User {
   fullname  String
   email     String   @unique
   password  String
-  faculty   Faculty
-  year      Year
   games     Game[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -77,18 +75,6 @@ model Guess {
 }
 
 // Enums
-enum Faculty {
-  BSC_IT
-  BBA
-}
-
-enum Year {
-  FIRST
-  SECOND
-  THIRD
-  FOURTH
-}
-
 enum GameStatus {
   IN_PROGRESS
   COMPLETED

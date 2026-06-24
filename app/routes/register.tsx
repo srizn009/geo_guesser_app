@@ -12,8 +12,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   const confirmPassword = formData.get('confirmPassword') as string;
-  const faculty = formData.get('faculty') as string;
-  const year = formData.get('year') as string;
 
   // Validation
   const errors: Record<string, string> = {};
@@ -34,14 +32,6 @@ export async function action({ request }: ActionFunctionArgs) {
     errors.confirmPassword = 'Passwords do not match';
   }
 
-  if (!faculty) {
-    errors.faculty = 'Faculty is required';
-  }
-
-  if (!year) {
-    errors.year = 'Year is required';
-  }
-
   if (Object.keys(errors).length > 0) {
     return { errors };
   }
@@ -57,13 +47,7 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     // Create user
-    const user = await createUser(
-      fullname,
-      email,
-      password,
-      faculty as 'BSC_IT' | 'BBA',
-      year as 'FIRST' | 'SECOND' | 'THIRD' | 'FOURTH'
-    );
+    const user = await createUser(fullname, email, password);
 
     // Create session and redirect to game
     return createUserSession(user.id, '/game');
@@ -201,77 +185,6 @@ export default function Register({ }: Route.ComponentProps) {
               {actionData?.errors?.confirmPassword && (
                 <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                   {actionData.errors.confirmPassword}
-                </p>
-              )}
-            </div>
-
-            {/* Faculty */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Faculty
-              </label>
-              <div className="grid grid-cols-2 gap-4">
-                <label className="relative flex items-center justify-center px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50 dark:has-[:checked]:bg-indigo-900/20">
-                  <input
-                    type="radio"
-                    name="faculty"
-                    value="BSC_IT"
-                    className="sr-only"
-                  />
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">
-                    BSC IT
-                  </span>
-                </label>
-                <label className="relative flex items-center justify-center px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50 dark:has-[:checked]:bg-indigo-900/20">
-                  <input
-                    type="radio"
-                    name="faculty"
-                    value="BBA"
-                    className="sr-only"
-                  />
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">
-                    BBA
-                  </span>
-                </label>
-              </div>
-              {actionData?.errors?.faculty && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                  {actionData.errors.faculty}
-                </p>
-              )}
-            </div>
-
-            {/* Year */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Year
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  { value: 'FIRST', label: '1st Year' },
-                  { value: 'SECOND', label: '2nd Year' },
-                  { value: 'THIRD', label: '3rd Year' },
-                  { value: 'FOURTH', label: '4th Year' },
-                ].map((year) => (
-                  <label
-                    key={year.value}
-                    className="relative flex items-center justify-center px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50 dark:has-[:checked]:bg-indigo-900/20"
-                  >
-                    <input
-                      type="radio"
-                      name="year"
-                      value={year.value}
-                      className="sr-only"
-                    />
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">
-                      {year.label}
-                    </span>
-                  </label>
-                ))}
-              </div>
-              {actionData?.errors?.year && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                  {actionData.errors.year}
                 </p>
               )}
             </div>

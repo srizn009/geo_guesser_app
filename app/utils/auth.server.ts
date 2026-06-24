@@ -16,18 +16,14 @@ export async function createUser(
   fullname: string,
   email: string,
   password: string,
-  faculty: 'BSC_IT' | 'BBA',
-  year: 'FIRST' | 'SECOND' | 'THIRD' | 'FOURTH'
 ) {
   const hashedPassword = await hashPassword(password);
-  
+
   return prisma.user.create({
     data: {
       fullname: fullname.trim(),
       email: email.toLowerCase().trim(),
       password: hashedPassword,
-      faculty,
-      year,
     },
   });
 }

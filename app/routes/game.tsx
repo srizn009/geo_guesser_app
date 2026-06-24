@@ -13,8 +13,6 @@ export async function loader({ request }: Route.LoaderArgs) {
       id: true,
       fullname: true,
       email: true,
-      faculty: true,
-      year: true,
       games: {
         where: { status: 'COMPLETED' },
         select: { totalScore: true },

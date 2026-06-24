@@ -13,8 +13,6 @@ export async function loader({ request }: Route.LoaderArgs) {
       id: true,
       fullname: true,
       email: true,
-      faculty: true,
-      year: true,
       createdAt: true,
       games: {
         where: { status: 'COMPLETED' },
@@ -54,12 +52,6 @@ export default function Profile({ loaderData }: Route.ComponentProps) {
     document.addEventListener('mousedown', handleOutside);
     return () => document.removeEventListener('mousedown', handleOutside);
   }, []);
-
-  const facultyLabel = user.faculty === 'BSC_IT' ? 'BSC IT' : 'BBA';
-  const yearLabel =
-    user.year === 'FIRST' ? '1st' :
-    user.year === 'SECOND' ? '2nd' :
-    user.year === 'THIRD' ? '3rd' : '4th';
 
   const joinedDate = new Date(user.createdAt).toLocaleDateString('en-US', {
     year: 'numeric', month: 'long', day: 'numeric',
@@ -176,8 +168,6 @@ export default function Profile({ loaderData }: Route.ComponentProps) {
             {[
               { label: 'Full Name', value: user.fullname },
               { label: 'Email Address', value: user.email },
-              { label: 'Faculty', value: facultyLabel },
-              { label: 'Year', value: `${yearLabel} Year` },
             ].map(({ label, value }) => (
               <div key={label} className="flex items-center justify-between px-6 py-4">
                 <dt className="text-sm text-gray-500 dark:text-gray-400">{label}</dt>
