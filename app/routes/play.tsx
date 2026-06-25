@@ -545,7 +545,7 @@ export default function Play({ loaderData }: Route.ComponentProps) {
 
       {/* ── Header ── */}
       <header className="bg-gray-800 border-b border-gray-700 flex-shrink-0 z-30">
-        <div className="max-w-full px-6 h-14 flex items-center justify-between">
+        <div className="max-w-full px-6 h-14 flex items-center justify-between relative">
           {/* Nav pills */}
           <nav className="flex items-center gap-1">
             <Link to="/game" className="px-4 py-1.5 text-sm font-medium rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition">
@@ -555,6 +555,11 @@ export default function Play({ loaderData }: Route.ComponentProps) {
               Leaderboard
             </Link>
           </nav>
+
+          {/* Centered logo */}
+          <Link to="/game" className="absolute left-1/2 -translate-x-1/2 flex items-center bg-white rounded-lg px-3 py-1" aria-label="Home">
+            <img src="/logo.svg" alt="Presidential" className="h-7 w-auto" />
+          </Link>
 
           {/* Avatar dropdown */}
           <div className="relative" ref={dropdownRef}>
