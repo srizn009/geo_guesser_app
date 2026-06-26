@@ -135,7 +135,7 @@ export default function Play({ loaderData }: Route.ComponentProps) {
   const [mainScore, setMainScore] = useState<number | null>(null);
   const [selectedCoords, setSelectedCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(120);
+  const [timeLeft, setTimeLeft] = useState(60);
   const [timedOut, setTimedOut] = useState(false);
   const [mapType, setMapType] = useState<'hybrid' | 'roadmap'>('roadmap');
 
@@ -425,7 +425,7 @@ export default function Play({ loaderData }: Route.ComponentProps) {
       setDistance(null);
       setMainScore(null);
       setTimedOut(false);
-      setTimeLeft(120);
+      setTimeLeft(60);
       setAnimatedScore(0);
       setAnimatedDistance(0);
       setUseStreetView(false);
