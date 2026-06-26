@@ -135,8 +135,9 @@ export default function Play({ loaderData }: Route.ComponentProps) {
   const [mainScore, setMainScore] = useState<number | null>(null);
   const [selectedCoords, setSelectedCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(120);
   const [timedOut, setTimedOut] = useState(false);
+  const [mapType, setMapType] = useState<'hybrid' | 'roadmap'>('roadmap');
 
   // Animated display values for count-up
   const [animatedScore, setAnimatedScore] = useState(0);
@@ -307,6 +308,7 @@ export default function Play({ loaderData }: Route.ComponentProps) {
         const mapInstance = new Map(mapRef.current!, {
           center: { lat: 28.3949, lng: 84.124 },
           zoom: 7,
+          mapTypeId: 'roadmap',
           mapTypeControl: false,
           streetViewControl: false,
           fullscreenControl: false,
@@ -408,6 +410,12 @@ export default function Play({ loaderData }: Route.ComponentProps) {
     setIsSubmitted(true);
   };
 
+  const toggleMapType = () => {
+    const next = mapType === 'hybrid' ? 'roadmap' : 'hybrid';
+    setMapType(next);
+    map?.setMapTypeId(next);
+  };
+
   const handleNextRound = async () => {
     if (currentRound >= 5) {
       setGameCompleted(true);
@@ -417,7 +425,7 @@ export default function Play({ loaderData }: Route.ComponentProps) {
       setDistance(null);
       setMainScore(null);
       setTimedOut(false);
-      setTimeLeft(60);
+      setTimeLeft(120);
       setAnimatedScore(0);
       setAnimatedDistance(0);
       setUseStreetView(false);
@@ -642,6 +650,18 @@ export default function Play({ loaderData }: Route.ComponentProps) {
               <p className="text-base font-black text-indigo-400">{runningScore}</p>
             </div>
           </div>
+
+          {/* Layer toggle (top-left of map) */}
+          <button
+            onClick={toggleMapType}
+            className="absolute top-3 left-3 z-20 flex items-center gap-1.5 bg-gray-900/80 hover:bg-gray-800/90 border border-gray-600 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-lg backdrop-blur-sm transition"
+            title="Toggle map layer"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7l9-4 9 4-9 4-9-4zm0 6l9 4 9-4m-9 4v4" />
+            </svg>
+            {mapType === 'hybrid' ? 'Normal' : 'Satellite'}
+          </button>
 
           {/* Timer badge (top-right of map) */}
           {!isSubmitted && (

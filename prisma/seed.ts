@@ -12,8 +12,8 @@ async function main() {
       name: 'Boudhanath Stupa',
       description: 'One of the largest Buddhist stupas in the world, UNESCO World Heritage Site in Kathmandu',
       // On the outer kora (circumambulation road) northeast of the stupa
-      latitude: 27.7221,
-      longitude: 85.3619,
+      latitude: 27.721423547233478,
+      longitude: 85.36205545721334,
       imageUrl: '/locations/boudha/bo1.jpg',
       difficulty: Difficulty.EASY,
     },
@@ -21,8 +21,8 @@ async function main() {
       name: 'Pashupatinath Temple',
       description: 'Sacred Hindu temple complex on the banks of Bagmati River, UNESCO World Heritage Site',
       // On the road facing the main temple entrance
-      latitude: 27.7108,
-      longitude: 85.3492,
+      latitude: 27.71056101765504,
+      longitude: 85.34890449711453,
       imageUrl: '/locations/pashupatinath/p1.jpg',
       difficulty: Difficulty.EASY,
     },
@@ -90,15 +90,6 @@ async function main() {
       difficulty: Difficulty.MEDIUM,
     },
     {
-      name: 'Janakpur',
-      description: 'Historical city famous for Janaki Mandir',
-      // Road directly in front of Janaki Mandir
-      latitude: 26.7305,
-      longitude: 85.9274,
-      imageUrl: '/locations/Janakpur/j1.jpg',
-      difficulty: Difficulty.MEDIUM,
-    },
-    {
       name: 'Changu Narayan Temple',
       description: 'Ancient Hindu temple dedicated to Lord Vishnu',
       // Village approach road leading to the temple
@@ -129,8 +120,8 @@ async function main() {
       name: 'Pathibhara Temple',
       description: 'High-altitude pilgrimage temple in the eastern Taplejung hills',
       // Trail near the temple at ~3,794 m — minimal outdoor Street View; falls back to image
-      latitude: 27.4324,
-      longitude: 87.7792,
+      latitude: 27.429172909116602,
+      longitude: 87.76828307658968,
       imageUrl: '/locations/Pathibhara/pt1.jpg',
       difficulty: Difficulty.HARD,
     },
@@ -166,8 +157,8 @@ async function main() {
       name: 'Banke National Park',
       description: "Nepal's tenth national park, a key tiger corridor linking Bardiya National Park to forests in India",
       // Kohalpur area — nearest road with potential coverage
-      latitude: 28.2038,
-      longitude: 81.7220,
+      latitude: 28.185013209555198,
+      longitude: 81.9069116584992,
       imageUrl: '/locations/banke/1.jpg',
       difficulty: Difficulty.HARD,
     },
@@ -184,8 +175,8 @@ async function main() {
       name: 'Shuklaphanta National Park',
       description: 'Open grasslands and wetlands in far-western Nepal, famous for the largest swamp deer herds in the world',
       // Mahendranagar approach road — nearest town with coverage
-      latitude: 28.9688,
-      longitude: 80.1828,
+      latitude: 28.876467770920488,
+      longitude: 80.29147372668973,
       imageUrl: '/locations/shuklaphanta/1.jpg',
       difficulty: Difficulty.HARD,
     },
@@ -193,8 +184,8 @@ async function main() {
       name: 'Langtang National Park',
       description: "Nepal's first Himalayan national park, with dramatic peaks just north of Kathmandu Valley",
       // Syabrubesi — trekking start village, Google trekker imagery available
-      latitude: 28.1624,
-      longitude: 85.3423,
+      latitude: 28.129072240178264,
+      longitude: 85.54382449019663,
       imageUrl: '/locations/langtang/1.jpg',
       difficulty: Difficulty.HARD,
     },
@@ -202,8 +193,8 @@ async function main() {
       name: 'Makalu Barun National Park',
       description: "Remote park spanning from tropical forest to the world's fifth-highest peak, Mount Makalu",
       // Tumlingtar — gateway town with road coverage
-      latitude: 27.3149,
-      longitude: 87.1933,
+      latitude: 27.665609797122062,
+      longitude: 87.11202606368464,
       imageUrl: '/locations/makalu-barun/1.jpg',
       difficulty: Difficulty.HARD,
     },
@@ -211,8 +202,8 @@ async function main() {
       name: 'Shey Phoksundo National Park',
       description: "Nepal's largest and only trans-Himalayan national park, home to the stunning turquoise Phoksundo Lake",
       // Dunai — district headquarters, nearest road-level coverage
-      latitude: 28.9414,
-      longitude: 82.8940,
+      latitude: 29.463421115167723,
+      longitude: 82.80067453858216,
       imageUrl: '/locations/shey-phoksundo/1.jpg',
       difficulty: Difficulty.HARD,
     },
@@ -229,8 +220,8 @@ async function main() {
       name: 'Khaptad National Park',
       description: 'Tranquil mid-hill plateau park in far-western Nepal known for meadows and the Khaptad Baba ashram',
       // Silgadhi — nearest town in Doti district
-      latitude: 29.2612,
-      longitude: 81.0000,
+      latitude: 29.378302470063318,
+      longitude: 81.14174244252996,
       imageUrl: '/locations/khaptad/1.jpg',
       difficulty: Difficulty.HARD,
     },
@@ -238,8 +229,8 @@ async function main() {
       name: 'Shivapuri Nagarjun National Park',
       description: "Forested watershed on Kathmandu Valley's northern edge, a popular hiking and birdwatching spot",
       // Budhanilkantha area — main park entry road with Street View coverage
-      latitude: 27.7950,
-      longitude: 85.3649,
+      latitude: 27.81293897427175,
+      longitude: 85.38596494743912,
       imageUrl: '/locations/shivapuri-nagarjun/1.jpg',
       difficulty: Difficulty.EASY,
     },
